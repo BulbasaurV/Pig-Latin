@@ -1,0 +1,225 @@
+#include <fstream>
+#include <iostream>
+#include <string>
+
+
+
+
+using namespace std;
+
+
+bool isVowel(char);
+bool hasPunct(string);
+string rotate(string);
+string pigLatinString(string);
+string split(string);
+char findPunct(string);
+string rStr = "       ";
+static string str = " huh";
+
+
+int main()
+{
+    str = "welll,\0";
+    string str2 = " ";
+    int len = 0;
+    int remL = 0;
+    //cout << findPunct(str);
+
+
+    ifstream inFile("Ch7_Ex3Data.txt");
+    ofstream outFile("Ch7_Ex3Out.txt");
+
+
+    do 
+    {
+        remL = 50;
+        //ifstream inFile("Ch7_Ex3Data.txt");
+        getline(inFile, str);
+        do
+        {
+            remL = str.size();
+            //if(str.size() != remL)
+            str2 = split(str);
+            
+            len = str2.size();
+            if (hasPunct(str2))
+            {
+                char punct = findPunct(str2);
+                str2 = str2.substr(0, (len - 1));
+                outFile << string(pigLatinString(str2)) + punct << ' ';
+                //cout << string(pigLatinString(str2)) + punct << ' ';
+            }
+            else outFile << string(pigLatinString(str2)) << ' ';
+            //remL = str.size();
+            if (remL <= len)
+                continue;
+            str = str.substr(len + 1, (remL - len + 1) );
+            remL = str.size();
+        } while (remL > len);
+        outFile << endl;
+        
+
+
+        //inFile.close();
+    } while (!inFile.eof());
+     
+
+
+    inFile.close();
+    outFile.close();
+
+
+    return 0;
+}
+
+
+bool hasPunct(string st)
+{
+    //char punct = ' ';
+
+
+    if (st.find('.') < st.size())
+    {
+        return true;
+    }
+    else if (st.find(',') < st.size())
+    {
+        return true;
+    }
+    else if (st.find('?') < st.size())
+    {
+        return true;
+    }
+    else if (st.find(':') < st.size())
+    {
+        return true;
+    }
+    else if (st.find(';') < st.size())
+    {
+        return true;
+    }
+
+
+    return false;
+}
+
+
+char findPunct(string strPunct)
+{    
+    char punct = ' ';
+    //char test = ' ';
+
+
+    if (strPunct.find('.') < strPunct.size())
+    {
+        punct = '.';        
+        //return punct;
+    }
+    else if (strPunct.find(',') < strPunct.size())
+    {
+        punct = ',';        
+        //return punct;
+    }
+    else if (strPunct.find('?') < strPunct.size())
+    {
+        punct = '?';        
+    }
+    else if (strPunct.find(':') < strPunct.size())
+    {
+        punct = ':';        
+    }
+    else if (strPunct.find(';') < strPunct.size())
+    {
+        punct = ';';        
+    }
+    
+    return punct;
+}
+
+
+string split(string rStr)
+{
+    //string rtr2 = " ";// declare string variables
+    int spc = 0;       
+        
+    //separate first word from remainder of string
+    if (str.find(' ') < str.length())
+    {
+        spc = str.find(' ');
+        rStr = str.substr(0, spc);
+    }
+
+
+    return rStr;
+}
+
+
+
+
+
+
+bool isVowel(char ch)
+{
+    switch (ch)
+    {
+    case 'A':
+    case 'E':
+    case 'I':
+    case 'O':
+    case 'U':
+    case 'Y':
+    case 'a':
+    case 'e':
+    case 'i':
+    case 'o':
+    case 'u':
+    case 'y':
+        return true;
+    default:
+        return false;
+    }
+}
+string rotate(string pStr)
+{
+    int len = pStr.length();
+    
+    rStr = pStr.substr(1, len - 1) + pStr[0];
+    return rStr;
+}
+string pigLatinString(string pStr)
+{
+    int len = pStr.length();
+    
+    bool foundVowel;
+
+
+    //int counter;
+
+
+    if (isVowel(pStr[0]))
+        pStr = pStr + "-way";
+    else
+    {
+        pStr = pStr + '-';
+        pStr = rotate(pStr);
+        len = pStr.length();
+        foundVowel = false;
+        for (int counter = 1; counter < len - 1; counter++)
+        
+            if (isVowel(pStr[0]))
+            {
+                foundVowel = true;
+                break;
+            }
+            else
+                pStr = rotate(pStr);
+        
+        if (!foundVowel)
+                pStr = pStr.substr(1, len) + "-way";
+        else
+                pStr = pStr + "ay";
+        
+        
+    }   return pStr;
+}
